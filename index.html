@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VLV EVENTS INVENTORY</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <button class="menu-btn" onclick="toggleDrawer()">
+      <i class="fa-solid fa-bars-staggered"></i>
+    </button>
+    <img class="top-logo" src="vlv-logo.jpg" alt="VLV Events logo" />
+    <div>
+      <h2>VLV EVENTS INVENTORY</h2>
+      <p>Stock Booking, Issue & Return System</p>
+    </div>
+  </div>
+
+  <div class="user-pill" id="userPill">
+    <i class="fa-solid fa-user"></i>
+    <span>Guest</span>
+  </div>
+</header>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Inventory Menu</h3>
+    <button onclick="toggleDrawer()">×</button>
+  </div>
+
+  <button onclick="showPage('home')">
+    <i class="fa-solid fa-house"></i> Dashboard
+  </button>
+
+  <button onclick="location.href='stock.html'">
+  <i class="fa-solid fa-boxes-stacked"></i> Stock Management
+</button>
+
+  <button onclick="showPage('booking')">
+    <i class="fa-solid fa-cart-flatbed"></i> Book Items
+  </button>
+
+  <button onclick="showPage('requests')">
+    <i class="fa-solid fa-list-check"></i> Requests
+  </button>
+
+  <button onclick="showPage('workers')">
+    <i class="fa-solid fa-users-gear"></i> Workers
+  </button>
+
+  <button onclick="showPage('reports')">
+    <i class="fa-solid fa-chart-line"></i> Reports
+  </button>
+
+  <button onclick="logout()">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+  </button>
+</aside>
+
+<div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+
+<main class="container">
+
+  <!-- AUTH PAGE -->
+  <section class="auth-page" id="authPage">
+    <div class="auth-card">
+      <div class="logo-circle">
+        <i class="fa-solid fa-warehouse"></i>
+      </div>
+
+      <h1>VLV EVENTS INVENTORY</h1>
+      <p class="muted">Worker approval, stock issue, return & reports</p>
+
+      <div class="tabs">
+        <button class="active" onclick="switchAuth('login')">Login</button>
+        <button onclick="switchAuth('register')">Worker Request</button>
+      </div>
+
+      <div id="loginBox">
+        <input id="loginPhone" placeholder="Phone number" />
+        <input id="loginPassword" type="password" placeholder="Password" />
+
+        <button class="primary-btn" onclick="loginUser()">
+          Login
+        </button>
+
+        <div class="hint">
+  Only approved staff can access the inventory system.
+</div>
+      </div>
+
+      <div id="registerBox" class="hidden">
+        <input id="regName" placeholder="Worker name" />
+        <input id="regPhone" placeholder="Phone number" />
+        <input id="regPassword" type="password" placeholder="Create password" />
+
+        <button class="primary-btn" onclick="registerWorker()">
+          Send Approval Request
+        </button>
+
+        <div class="hint">
+          Admin approve karega tabhi worker login kar payega.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP PAGE -->
+  <section id="appPage" class="hidden">
+
+    <!-- HOME -->
+    <section class="page active" id="home">
+      <div class="hero-card">
+        <div>
+          <h1>Welcome, <span id="welcomeName">Admin</span></h1>
+          <p>Event ke saman ka issue, return aur remaining stock yahin manage hoga.</p>
+        </div>
+        <i class="fa-solid fa-box-open hero-icon"></i>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <h3 id="totalItems">0</h3>
+          <p>Total Items</p>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <h3 id="lowStock">0</h3>
+          <p>Low Stock</p>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-clock"></i>
+          <h3 id="pendingRequests">0</h3>
+          <p>Pending Requests</p>
+        </div>
+
+        <div class="stat-card">
+          <i class="fa-solid fa-users"></i>
+          <h3 id="totalWorkers">0</h3>
+          <p>Workers</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>Smart Inventory Sections</h2>
+        <div class="section-tags clickable-sections">
+  <button onclick="openSection('Frames')">
+    <i class="fa-solid fa-border-all"></i>
+    Frames
+  </button>
+
+  <button onclick="openSection('Lights')">
+    <i class="fa-solid fa-lightbulb"></i>
+    Lights
+  </button>
+
+  <button onclick="openSection('Flower')">
+    <i class="fa-solid fa-spa"></i>
+    Flower
+  </button>
+
+  <button onclick="openSection('Cloth')">
+    <i class="fa-solid fa-shirt"></i>
+    Cloth
+  </button>
+
+  <button onclick="openSection('Large Props')">
+    <i class="fa-solid fa-couch"></i>
+    Large Props
+  </button>
+
+  <button onclick="openSection('Small Props')">
+    <i class="fa-solid fa-cubes"></i>
+    Small Props
+  </button>
+
+  <button onclick="openSection('Table Decor Items')">
+    <i class="fa-solid fa-champagne-glasses"></i>
+    Table Decor Items
+  </button>
+</div>
+      </div>
+    </section>
+
+    <!-- STOCK -->
+    <section class="page" id="stock">
+      <div class="page-head">
+        <div>
+          <h1>Stock Management</h1>
+          <p>Add, search and manage available event items.</p>
+        </div>
+      </div>
+
+      <div class="section-card admin-only">
+        <h2>Add New Stock Item</h2>
+
+        <div class="form-grid">
+          <input id="itemName" placeholder="Item name e.g. Golden Chair" />
+          <input id="itemSection" placeholder="Section e.g. Frames" />
+          <input id="itemQty" type="number" placeholder="Quantity" />
+          <input id="itemMin" type="number" placeholder="Low stock alert qty" />
+        </div>
+
+        <textarea id="itemNote" placeholder="Note / location / rack number"></textarea>
+
+        <button class="primary-btn" onclick="addItem()">
+          Add Item
+        </button>
+      </div>
+
+      <div class="toolbar stock-toolbar">
+  <input id="stockSearch" oninput="renderStock()" placeholder="Search item or section..." />
+
+  <button class="gray-btn" onclick="clearStockFilter()">
+    All Stock
+  </button>
+</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Section</th>
+              <th>Available</th>
+              <th>Alert</th>
+              <th>Note</th>
+              <th class="admin-only">Action</th>
+            </tr>
+          </thead>
+          <tbody id="stockTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BOOKING -->
+    <section class="page" id="booking">
+      <div class="page-head">
+        <div>
+          <h1>Book / Issue Items</h1>
+          <p>Worker yahan se event ke liye saman request karega.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>Create Booking Request</h2>
+
+        <div class="form-grid">
+          <input id="eventName" placeholder="Event name e.g. Wedding at Patna" />
+          <input id="eventLocation" placeholder="Event location" />
+        </div>
+
+        <textarea id="bookingNote" placeholder="Extra note"></textarea>
+      </div>
+
+      <div class="section-card date-stock-panel">
+        <div>
+          <h2>Check Stock by Date</h2>
+          <p class="muted">Select event date range to see date-wise available stock.</p>
+        </div>
+
+        <div class="date-stock-grid">
+          <label>
+            <span>From Date</span>
+            <input id="eventDate" type="date" onchange="renderBookingItems()" />
+          </label>
+          <label>
+            <span>To Date</span>
+            <input id="returnDate" type="date" onchange="renderBookingItems()" />
+          </label>
+          <button class="primary-btn" onclick="checkDateStock()">
+            Check Availability
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="bookingSearch" oninput="renderBookingItems()" placeholder="Search item to book..." />
+      </div>
+
+      <div id="bookingItems" class="item-grid"></div>
+
+      <div class="section-card">
+        <h2>Selected Items</h2>
+        <div id="cartList" class="cart-list"></div>
+
+        <button class="primary-btn" onclick="submitBooking()">
+          Submit Booking Request
+        </button>
+      </div>
+    </section>
+
+    <!-- REQUESTS -->
+    <section class="page" id="requests">
+      <div class="page-head">
+        <div>
+          <h1>Issue / Return Requests</h1>
+          <p>Admin approval date-wise stock reserve karega.</p>
+        </div>
+      </div>
+
+      <div id="requestList" class="request-list"></div>
+    </section>
+
+    <!-- WORKERS -->
+    <section class="page" id="workers">
+      <div class="page-head">
+        <div>
+          <h1>Workers</h1>
+          <p>Worker account approval panel.</p>
+        </div>
+      </div>
+
+      <div id="workerList" class="request-list"></div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="page" id="reports">
+      <div class="page-head">
+        <div>
+          <h1>Reports</h1>
+          <p>Owner ko dikhane ke liye clean inventory history.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>Inventory Movement History</h2>
+        <div id="reportList" class="report-list"></div>
+      </div>
+    </section>
+
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+
+<script src="common.js"></script>
+</body>
+</html>

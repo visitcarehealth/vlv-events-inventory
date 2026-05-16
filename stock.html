@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stock Management - Event Inventory</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+.stock-page {
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px;
+}
+
+.stock-hero {
+  background: linear-gradient(135deg, #1b4dff, #8b2cff);
+  color: white;
+  padding: 28px;
+  border-radius: 28px;
+  margin-bottom: 20px;
+}
+
+.stock-hero h1 {
+  margin: 0 0 8px;
+}
+
+.stock-hero p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.stock-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.stock-actions input,
+.stock-actions select {
+  flex: 1;
+  min-width: 190px;
+}
+
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.stock-card {
+  background: white;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(30,40,80,0.08);
+}
+
+.stock-img {
+  width: 100%;
+  height: 180px;
+  border-radius: 18px;
+  object-fit: cover;
+  background: #eef1f6;
+}
+
+.stock-card h3 {
+  margin: 12px 0 4px;
+}
+
+.stock-meta {
+  color: #667085;
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+.stock-count {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.stock-count div {
+  flex: 1;
+  background: #f7f8fc;
+  padding: 12px;
+  border-radius: 15px;
+}
+
+.stock-count b {
+  font-size: 22px;
+  display: block;
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.card-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.modal-bg.show {
+  display: flex;
+}
+
+.modal-box {
+  background: white;
+  width: 100%;
+  max-width: 620px;
+  border-radius: 25px;
+  padding: 22px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-head button {
+  border: none;
+  background: #f1f3f8;
+  font-size: 25px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.history-table {
+  background: white;
+  border-radius: 22px;
+  overflow-x: auto;
+  box-shadow: 0 10px 30px rgba(30,40,80,0.08);
+  margin-top: 20px;
+}
+
+@media(max-width: 900px) {
+  .stock-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media(max-width: 600px) {
+  .stock-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <button class="menu-btn" onclick="location.href='index.html'">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <div>
+      <h2>Stock Management</h2>
+      <p>Image, quantity, issue, return & out-of-stock record</p>
+    </div>
+  </div>
+
+  <div class="user-pill">
+    <i class="fa-solid fa-boxes-stacked"></i>
+    <span>Stock</span>
+  </div>
+</header>
+
+<main class="stock-page">
+
+  <section class="stock-hero">
+    <h1>Event Stock Control</h1>
+    <p>Owner ko batane ke liye exact available saman, last issue event aur out-of-stock date yahin dikhega.</p>
+  </section>
+
+  <div class="stock-actions">
+    <input id="searchInput" oninput="renderStock()" placeholder="Search item, section, event...">
+
+    <select id="sectionFilter" onchange="renderStock()">
+      <option value="">All Sections</option>
+      <option value="Decor">Decor</option>
+      <option value="Lighting">Lighting</option>
+      <option value="Sound">Sound</option>
+      <option value="Furniture">Furniture</option>
+      <option value="Catering">Catering</option>
+      <option value="Stage">Stage</option>
+      <option value="Electrical">Electrical</option>
+      <option value="Fabric">Fabric</option>
+    </select>
+
+    <button class="primary-btn" onclick="openAddModal()">
+      <i class="fa-solid fa-plus"></i> Add Stock
+    </button>
+
+    <button class="gray-btn" onclick="exportCSV()">
+      <i class="fa-solid fa-file-excel"></i> Export Excel
+    </button>
+  </div>
+
+  <div id="stockGrid" class="stock-grid"></div>
+
+  <section class="section-card" style="margin-top:25px;">
+    <h2>Stock History / Excel Style Record</h2>
+    <p class="muted">Yahan har stock add, issue, return, out-of-stock ka record save hota rahega.</p>
+
+    <div class="history-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Item</th>
+            <th>Action</th>
+            <th>Qty</th>
+            <th>Event</th>
+            <th>Worker</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-bg" id="itemModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">Add Stock Item</h2>
+      <button onclick="closeModal('itemModal')">×</button>
+    </div>
+
+    <input type="hidden" id="editId">
+
+    <input id="itemName2" placeholder="Item name e.g. Golden Chair">
+    <input id="itemSection2" placeholder="Section e.g. Furniture">
+
+    <input id="itemImage2" placeholder="Image URL e.g. https://...jpg">
+
+    <div class="form-grid">
+      <input id="itemQty2" type="number" placeholder="Available quantity">
+      <input id="itemMin2" type="number" placeholder="Low stock alert">
+    </div>
+
+    <input id="itemLocation2" placeholder="Storage location / rack number">
+    <textarea id="itemNote2" placeholder="Extra note"></textarea>
+
+    <button class="primary-btn" onclick="saveItem()">
+      Save Item
+    </button>
+  </div>
+</div>
+
+<!-- STOCK ACTION MODAL -->
+<div class="modal-bg" id="actionModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="actionTitle">Stock Action</h2>
+      <button onclick="closeModal('actionModal')">×</button>
+    </div>
+
+    <input type="hidden" id="actionItemId">
+    <input type="hidden" id="actionType">
+
+    <input id="actionQty" type="number" placeholder="Quantity">
+    <input id="actionEvent" placeholder="Event name">
+    <input id="actionWorker" placeholder="Worker / staff name">
+    <textarea id="actionNote" placeholder="Note"></textarea>
+
+    <button class="primary-btn" onclick="saveStockAction()">
+      Save Record
+    </button>
+  </div>
+</div>
+
+<script>
+const ITEM_KEY = "event_inventory_items";
+const HISTORY_KEY = "event_inventory_stock_history";
+
+function getData(key) {
+  return JSON.parse(localStorage.getItem(key)) || [];
+}
+
+function setData(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function toast(msg) {
+  alert(msg);
+}
+
+function initStockData() {
+  let items = getData(ITEM_KEY);
+
+  if (items.length === 0) {
+    items = [
+      {
+        id: Date.now() + 1,
+        name: "Golden Chair",
+        section: "Furniture",
+        qty: 100,
+        min: 15,
+        image: "",
+        location: "Rack F1",
+        note: "Wedding chair",
+        lastEvent: "",
+        outOfStockAt: "",
+        outOfStockEvent: ""
+      },
+      {
+        id: Date.now() + 2,
+        name: "Pink Slate",
+        section: "Decor",
+        qty: 26,
+        min: 5,
+        image: "",
+        location: "Decor Room",
+        note: "Entry decoration",
+        lastEvent: "",
+        outOfStockAt: "",
+        outOfStockEvent: ""
+      },
+      {
+        id: Date.now() + 3,
+        name: "LED Par Light",
+        section: "Lighting",
+        qty: 20,
+        min: 4,
+        image: "",
+        location: "Light Box L2",
+        note: "Stage light",
+        lastEvent: "",
+        outOfStockAt: "",
+        outOfStockEvent: ""
+      }
+    ];
+
+    setData(ITEM_KEY, items);
+  }
+
+  items = items.map(item => ({
+    image: "",
+    location: "",
+    lastEvent: "",
+    outOfStockAt: "",
+    outOfStockEvent: "",
+    ...item
+  }));
+
+  setData(ITEM_KEY, items);
+}
+
+function renderStock() {
+  const grid = document.getElementById("stockGrid");
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const section = document.getElementById("sectionFilter").value;
+
+  let items = getData(ITEM_KEY);
+
+  items = items.filter(item => {
+    const text = `
+      ${item.name}
+      ${item.section}
+      ${item.lastEvent || ""}
+      ${item.outOfStockEvent || ""}
+      ${item.location || ""}
+    `.toLowerCase();
+
+    const matchSearch = text.includes(search);
+    const matchSection = section ? item.section === section : true;
+
+    return matchSearch && matchSection;
+  });
+
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="section-card">No stock found</div>`;
+    return;
+  }
+
+  grid.innerHTML = items.map(item => {
+    const qty = Number(item.qty || 0);
+    const min = Number(item.min || 1);
+
+    let badge = `<span class="badge ok">Available</span>`;
+
+    if (qty <= 0) {
+      badge = `<span class="badge danger">Out of Stock</span>`;
+    } else if (qty <= min) {
+      badge = `<span class="badge low">Low Stock</span>`;
+    }
+
+    const image = item.image && item.image.trim()
+      ? item.image
+      : "https://dummyimage.com/600x400/eef1f6/1b4dff&text=No+Image";
+
+    return `
+      <div class="stock-card">
+        <img class="stock-img" src="${image}" onerror="this.src='https://dummyimage.com/600x400/eef1f6/1b4dff&text=Image+Error'">
+
+        <h3>${item.name}</h3>
+        <p class="stock-meta">
+          <b>Section:</b> ${item.section}<br>
+          <b>Location:</b> ${item.location || "-"}
+        </p>
+
+        <div class="badge-row">
+          ${badge}
+          <span class="badge ok">${item.section}</span>
+        </div>
+
+        <div class="stock-count">
+          <div>
+            <b>${qty}</b>
+            <span>Available</span>
+          </div>
+          <div>
+            <b>${min}</b>
+            <span>Alert Qty</span>
+          </div>
+        </div>
+
+        <p class="stock-meta">
+          <b>Last Event:</b> ${item.lastEvent || "-"}<br>
+          <b>Out Stock Date:</b> ${item.outOfStockAt || "-"}<br>
+          <b>Out Stock Event:</b> ${item.outOfStockEvent || "-"}
+        </p>
+
+        <p class="stock-meta">
+          <b>Note:</b> ${item.note || "-"}
+        </p>
+
+        <div class="card-btns">
+          <button class="success-btn" onclick="openActionModal(${item.id}, 'add')">
+            + Add
+          </button>
+
+          <button class="gray-btn" onclick="openActionModal(${item.id}, 'issue')">
+            Issue
+          </button>
+
+          <button class="primary-btn" onclick="openActionModal(${item.id}, 'return')">
+            Return
+          </button>
+
+          <button class="gray-btn" onclick="editItem(${item.id})">
+            Edit
+          </button>
+
+          <button class="danger-btn" onclick="deleteItem2(${item.id})">
+            Delete
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function openAddModal() {
+  document.getElementById("modalTitle").innerText = "Add Stock Item";
+  document.getElementById("editId").value = "";
+  document.getElementById("itemName2").value = "";
+  document.getElementById("itemSection2").value = "";
+  document.getElementById("itemImage2").value = "";
+  document.getElementById("itemQty2").value = "";
+  document.getElementById("itemMin2").value = "";
+  document.getElementById("itemLocation2").value = "";
+  document.getElementById("itemNote2").value = "";
+
+  document.getElementById("itemModal").classList.add("show");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("show");
+}
+
+function saveItem() {
+  const editId = document.getElementById("editId").value;
+
+  const name = document.getElementById("itemName2").value.trim();
+  const section = document.getElementById("itemSection2").value.trim();
+  const image = document.getElementById("itemImage2").value.trim();
+  const qty = Number(document.getElementById("itemQty2").value);
+  const min = Number(document.getElementById("itemMin2").value);
+  const location = document.getElementById("itemLocation2").value.trim();
+  const note = document.getElementById("itemNote2").value.trim();
+
+  if (!name || !section) {
+    toast("Item name and section required");
+    return;
+  }
+
+  let items = getData(ITEM_KEY);
+
+  if (editId) {
+    const item = items.find(i => String(i.id) === String(editId));
+
+    item.name = name;
+    item.section = section;
+    item.image = image;
+    item.qty = qty;
+    item.min = min || 1;
+    item.location = location;
+    item.note = note;
+
+    addHistory({
+      itemName: name,
+      action: "EDIT",
+      qty: qty,
+      eventName: "-",
+      worker: "Admin",
+      note: "Item details edited"
+    });
+
+  } else {
+    const newItem = {
+      id: Date.now(),
+      name,
+      section,
+      image,
+      qty,
+      min: min || 1,
+      location,
+      note,
+      lastEvent: "",
+      outOfStockAt: qty <= 0 ? new Date().toLocaleString() : "",
+      outOfStockEvent: ""
+    };
+
+    items.push(newItem);
+
+    addHistory({
+      itemName: name,
+      action: "NEW STOCK",
+      qty,
+      eventName: "-",
+      worker: "Admin",
+      note: "New item added"
+    });
+  }
+
+  setData(ITEM_KEY, items);
+
+  closeModal("itemModal");
+  renderStock();
+  renderHistory();
+}
+
+function editItem(id) {
+  const items = getData(ITEM_KEY);
+  const item = items.find(i => i.id === id);
+
+  document.getElementById("modalTitle").innerText = "Edit Stock Item";
+  document.getElementById("editId").value = item.id;
+  document.getElementById("itemName2").value = item.name;
+  document.getElementById("itemSection2").value = item.section;
+  document.getElementById("itemImage2").value = item.image || "";
+  document.getElementById("itemQty2").value = item.qty;
+  document.getElementById("itemMin2").value = item.min;
+  document.getElementById("itemLocation2").value = item.location || "";
+  document.getElementById("itemNote2").value = item.note || "";
+
+  document.getElementById("itemModal").classList.add("show");
+}
+
+function deleteItem2(id) {
+  if (!confirm("Delete this stock item?")) return;
+
+  let items = getData(ITEM_KEY);
+  const item = items.find(i => i.id === id);
+
+  items = items.filter(i => i.id !== id);
+  setData(ITEM_KEY, items);
+
+  addHistory({
+    itemName: item.name,
+    action: "DELETE",
+    qty: item.qty,
+    eventName: "-",
+    worker: "Admin",
+    note: "Item deleted"
+  });
+
+  renderStock();
+  renderHistory();
+}
+
+function openActionModal(id, type) {
+  const items = getData(ITEM_KEY);
+  const item = items.find(i => i.id === id);
+
+  document.getElementById("actionItemId").value = id;
+  document.getElementById("actionType").value = type;
+  document.getElementById("actionQty").value = "";
+  document.getElementById("actionEvent").value = "";
+  document.getElementById("actionWorker").value = "";
+  document.getElementById("actionNote").value = "";
+
+  let title = "";
+
+  if (type === "add") title = `Add Stock - ${item.name}`;
+  if (type === "issue") title = `Issue Stock - ${item.name}`;
+  if (type === "return") title = `Return Stock - ${item.name}`;
+
+  document.getElementById("actionTitle").innerText = title;
+  document.getElementById("actionModal").classList.add("show");
+}
+
+function saveStockAction() {
+  const id = Number(document.getElementById("actionItemId").value);
+  const type = document.getElementById("actionType").value;
+  const qty = Number(document.getElementById("actionQty").value);
+  const eventName = document.getElementById("actionEvent").value.trim();
+  const worker = document.getElementById("actionWorker").value.trim();
+  const note = document.getElementById("actionNote").value.trim();
+
+  if (!qty || qty <= 0) {
+    toast("Valid quantity required");
+    return;
+  }
+
+  let items = getData(ITEM_KEY);
+  const item = items.find(i => i.id === id);
+
+  if (type === "issue") {
+    if (qty > Number(item.qty)) {
+      toast("Available stock se jyada issue nahi ho sakta");
+      return;
+    }
+
+    item.qty = Number(item.qty) - qty;
+    item.lastEvent = eventName || "-";
+
+    if (Number(item.qty) <= 0) {
+      item.outOfStockAt = new Date().toLocaleString();
+      item.outOfStockEvent = eventName || "-";
+    }
+
+    addHistory({
+      itemName: item.name,
+      action: "ISSUE",
+      qty,
+      eventName: eventName || "-",
+      worker: worker || "-",
+      note: note || "Stock issued"
+    });
+  }
+
+  if (type === "add") {
+    item.qty = Number(item.qty) + qty;
+
+    if (Number(item.qty) > 0) {
+      item.outOfStockAt = "";
+      item.outOfStockEvent = "";
+    }
+
+    addHistory({
+      itemName: item.name,
+      action: "ADD",
+      qty,
+      eventName: eventName || "-",
+      worker: worker || "Admin",
+      note: note || "Stock added"
+    });
+  }
+
+  if (type === "return") {
+    item.qty = Number(item.qty) + qty;
+
+    if (Number(item.qty) > 0) {
+      item.outOfStockAt = "";
+      item.outOfStockEvent = "";
+    }
+
+    addHistory({
+      itemName: item.name,
+      action: "RETURN",
+      qty,
+      eventName: eventName || "-",
+      worker: worker || "-",
+      note: note || "Stock returned"
+    });
+  }
+
+  setData(ITEM_KEY, items);
+
+  closeModal("actionModal");
+  renderStock();
+  renderHistory();
+}
+
+function addHistory(data) {
+  let history = getData(HISTORY_KEY);
+
+  history.push({
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    itemName: data.itemName,
+    action: data.action,
+    qty: data.qty,
+    eventName: data.eventName,
+    worker: data.worker,
+    note: data.note
+  });
+
+  setData(HISTORY_KEY, history);
+}
+
+function renderHistory() {
+  const tbody = document.getElementById("historyTable");
+  let history = getData(HISTORY_KEY);
+
+  if (history.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7">No history found</td></tr>`;
+    return;
+  }
+
+  history = history.sort((a, b) => b.id - a.id);
+
+  tbody.innerHTML = history.map(h => `
+    <tr>
+      <td>${h.date}</td>
+      <td>${h.itemName}</td>
+      <td><span class="badge ok">${h.action}</span></td>
+      <td>${h.qty}</td>
+      <td>${h.eventName}</td>
+      <td>${h.worker}</td>
+      <td>${h.note}</td>
+    </tr>
+  `).join("");
+}
+
+function exportCSV() {
+  const history = getData(HISTORY_KEY);
+
+  if (history.length === 0) {
+    toast("No history to export");
+    return;
+  }
+
+  let csv = "Date,Item,Action,Qty,Event,Worker,Note\n";
+
+  history.forEach(h => {
+    csv += `"${h.date}","${h.itemName}","${h.action}","${h.qty}","${h.eventName}","${h.worker}","${h.note}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "stock-history.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initStockData();
+  renderStock();
+  renderHistory();
+});
+</script>
+
+</body>
+</html>
