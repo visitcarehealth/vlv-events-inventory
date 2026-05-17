@@ -7,247 +7,39 @@
 <title>Stock Management - VLV Events Inventory</title>
 
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <style>
-.stock-page {
-  max-width: 1300px;
-  margin: auto;
-  padding: 20px;
-}
-
-.stock-hero {
-  background: linear-gradient(135deg, #111111, #7a5600, #d4af37, #ffd76a);
-  color: white;
-  padding: 28px;
-  border-radius: 28px;
-  margin-bottom: 20px;
-}
-
-.stock-hero h1 {
-  margin: 0 0 8px;
-}
-
-.stock-hero p {
-  margin: 0;
-  opacity: 0.92;
-}
-
-.stock-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-}
-
-.stock-actions input,
-.stock-actions select {
-  flex: 1;
-  min-width: 190px;
-}
-
-.stock-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.stock-card {
-  background: white;
-  border-radius: 24px;
-  padding: 16px;
-  box-shadow: 0 10px 30px rgba(30,40,80,0.08);
-}
-
-.stock-img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  height: auto;
-  border-radius: 18px;
-  object-fit: contain;
-  background: #f8f6ef;
-  padding: 10px;
-}
-
-.stock-card h3 {
-  margin: 12px 0 4px;
-}
-
-.stock-meta {
-  color: #667085;
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-.stock-count {
-  display: flex;
-  gap: 10px;
-  margin: 12px 0;
-}
-
-.stock-count div {
-  flex: 1;
-  background: #f7f8fc;
-  padding: 12px;
-  border-radius: 15px;
-}
-
-.stock-count b {
-  font-size: 22px;
-  display: block;
-}
-
-.badge-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 10px 0;
-}
-
-.card-btns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 100;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-}
-
-.modal-bg.show {
-  display: flex;
-}
-
-.modal-box {
-  background: white;
-  width: 100%;
-  max-width: 620px;
-  border-radius: 25px;
-  padding: 22px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-head button {
-  border: none;
-  background: #f1f3f8;
-  font-size: 25px;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.history-table {
-  background: white;
-  border-radius: 22px;
-  overflow-x: auto;
-  box-shadow: 0 10px 30px rgba(30,40,80,0.08);
-  margin-top: 20px;
-}
-
-.stock-admin-note {
-  background: #fff5d6;
-  color: #8a6400;
-  padding: 12px 15px;
-  border-radius: 15px;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.no-image-box {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 18px;
-  background: #eef1f6;
-  color: #1b4dff;
-  display: grid;
-  place-items: center;
-  font-size: 40px;
-  font-weight: 500;
-}
-
-@media(max-width: 900px) {
-  .stock-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media(max-width: 600px) {
-  .stock-page {
-    padding: 14px;
-  }
-
-  .stock-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stock-actions {
-    flex-direction: column;
-  }
-
-  .stock-actions input,
-  .stock-actions select,
-  .stock-actions button {
-    width: 100%;
-  }
-
-  .stock-count {
-    flex-direction: column;
-  }
-}
+.stock-page{max-width:1300px;margin:auto;padding:20px}.stock-hero{background:linear-gradient(135deg,#111,#7a5600,#d4af37,#ffd76a);color:white;padding:28px;border-radius:28px;margin-bottom:20px}.stock-hero h1{margin:0 0 8px}.stock-hero p{margin:0;opacity:.92}.stock-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.stock-actions input,.stock-actions select{flex:1;min-width:190px}.stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.stock-card{background:white;border-radius:24px;padding:16px;box-shadow:0 10px 30px rgba(30,40,80,.08)}.stock-img{width:100%;aspect-ratio:4/3;height:auto;border-radius:18px;object-fit:contain;background:#f8f6ef;padding:10px}.stock-card h3{margin:12px 0 4px}.stock-meta{color:#667085;font-size:14px;margin:4px 0}.stock-count{display:flex;gap:10px;margin:12px 0}.stock-count div{flex:1;background:#f7f8fc;padding:12px;border-radius:15px}.stock-count b{font-size:22px;display:block}.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.card-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:none;align-items:center;justify-content:center;padding:15px}.modal-bg.show{display:flex}.modal-box{background:white;width:100%;max-width:620px;border-radius:25px;padding:22px;max-height:90vh;overflow-y:auto}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head button{border:none;background:#f1f3f8;font-size:25px;width:38px;height:38px;border-radius:12px;cursor:pointer}.history-table{background:white;border-radius:22px;overflow-x:auto;box-shadow:0 10px 30px rgba(30,40,80,.08);margin-top:20px}.stock-admin-note{background:#e9fbe9;color:#15803d;padding:12px 15px;border-radius:15px;margin-bottom:15px;font-weight:600}.no-image-box{width:100%;aspect-ratio:4/3;border-radius:18px;background:#eef1f6;color:#1b4dff;display:grid;place-items:center;font-size:28px;font-weight:700;text-align:center}.loading-box{background:white;border-radius:22px;padding:25px;box-shadow:0 10px 30px rgba(30,40,80,.08);color:#667085}@media(max-width:900px){.stock-grid{grid-template-columns:1fr 1fr}}@media(max-width:600px){.stock-page{padding:14px}.stock-grid{grid-template-columns:1fr}.stock-actions{flex-direction:column}.stock-actions input,.stock-actions select,.stock-actions button{width:100%}.stock-count{flex-direction:column}}
 </style>
 </head>
 
 <body>
-
 <header class="topbar">
   <div class="brand">
-    <button class="menu-btn" onclick="location.href='index.html'">
-      <i class="fa-solid fa-arrow-left"></i>
-    </button>
-
+    <button class="menu-btn" onclick="location.href='index.html'"><i class="fa-solid fa-arrow-left"></i></button>
     <div>
       <h2>STOCK MANAGEMENT</h2>
-      <p>Image, quantity, issue, return & out-of-stock record</p>
+      <p>Firebase live stock, issue, return & out-of-stock record</p>
     </div>
   </div>
-
-  <div class="user-pill">
-    <i class="fa-solid fa-boxes-stacked"></i>
-    <span>Stock</span>
-  </div>
+  <div class="user-pill"><i class="fa-solid fa-cloud"></i><span>Live Stock</span></div>
 </header>
 
 <main class="stock-page">
-
   <section class="stock-hero">
     <h1>Event Stock Control</h1>
-    <p>Owner ko batane ke liye exact available saman, last issue event aur out-of-stock date yahin dikhega.</p>
+    <p>Ab stock Firebase me save hoga, isliye phone/laptop dono me same data dikhega.</p>
   </section>
 
-  <div class="stock-admin-note">
-    Stock changes isi browser me save rahenge. Online sab devices me same data chahiye to baad me Firebase database connect karna hoga.
-  </div>
+  <div class="stock-admin-note">Firebase Connected: Stock changes online database me save honge. Same website phone/laptop par refresh ke baad bhi data rahega.</div>
 
   <div class="stock-actions">
     <input id="searchInput" oninput="renderStock()" placeholder="Search item, section, event...">
-
     <select id="sectionFilter" onchange="renderStock()">
       <option value="">All Sections</option>
       <option value="Frames">Frames</option>
@@ -258,727 +50,72 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
       <option value="Small Props">Small Props</option>
       <option value="Table Decor Items">Table Decor Items</option>
     </select>
-
-    <button class="primary-btn" onclick="openAddModal()">
-      <i class="fa-solid fa-plus"></i> Add Stock
-    </button>
-
-    <button class="gray-btn" onclick="exportCSV()">
-      <i class="fa-solid fa-file-excel"></i> Export Excel
-    </button>
+    <button class="primary-btn" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add Stock</button>
+    <button class="gray-btn" onclick="exportCSV()"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
   </div>
 
-  <div id="stockGrid" class="stock-grid"></div>
+  <div id="stockGrid" class="stock-grid"><div class="loading-box">Loading Firebase stock...</div></div>
 
   <section class="section-card" style="margin-top:25px;">
     <h2>Stock History / Excel Style Record</h2>
-    <p class="muted">Yahan har stock add, issue, return, out-of-stock ka record save hota rahega.</p>
-
+    <p class="muted">Yahan har stock add, issue, return, out-of-stock ka record Firebase me save hota rahega.</p>
     <div class="history-table">
       <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Item</th>
-            <th>Action</th>
-            <th>Qty</th>
-            <th>Event</th>
-            <th>Worker</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody id="historyTable"></tbody>
+        <thead><tr><th>Date</th><th>Item</th><th>Action</th><th>Qty</th><th>Event</th><th>Worker</th><th>Note</th></tr></thead>
+        <tbody id="historyTable"><tr><td colspan="7">Loading history...</td></tr></tbody>
       </table>
     </div>
   </section>
-
 </main>
 
-<!-- ADD / EDIT MODAL -->
 <div class="modal-bg" id="itemModal">
   <div class="modal-box">
-    <div class="modal-head">
-      <h2 id="modalTitle">Add Stock Item</h2>
-      <button onclick="closeModal('itemModal')">×</button>
-    </div>
-
+    <div class="modal-head"><h2 id="modalTitle">Add Stock Item</h2><button onclick="closeModal('itemModal')">×</button></div>
     <input type="hidden" id="editId">
-
     <input id="itemName2" placeholder="Item name e.g. Golden Frame">
-
     <select id="itemSection2">
-      <option value="">Select Section</option>
-      <option value="Frames">Frames</option>
-      <option value="Lights">Lights</option>
-      <option value="Flower">Flower</option>
-      <option value="Cloth">Cloth</option>
-      <option value="Large Props">Large Props</option>
-      <option value="Small Props">Small Props</option>
-      <option value="Table Decor Items">Table Decor Items</option>
+      <option value="">Select Section</option><option value="Frames">Frames</option><option value="Lights">Lights</option><option value="Flower">Flower</option><option value="Cloth">Cloth</option><option value="Large Props">Large Props</option><option value="Small Props">Small Props</option><option value="Table Decor Items">Table Decor Items</option>
     </select>
-
-    <input id="itemImage2" placeholder="Image URL e.g. https://...jpg">
-
-    <div class="form-grid">
-      <input id="itemQty2" type="number" min="0" placeholder="Available quantity">
-      <input id="itemMin2" type="number" min="0" placeholder="Low stock alert">
-    </div>
-
+    <input id="itemImage2" placeholder="Image URL e.g. https://visitcarehealth.github.io/vlv-events-inventory/images/item.jpg">
+    <div class="form-grid"><input id="itemQty2" type="number" min="0" placeholder="Available quantity"><input id="itemMin2" type="number" min="0" placeholder="Low stock alert"></div>
     <input id="itemLocation2" placeholder="Storage location / rack number">
     <textarea id="itemNote2" placeholder="Extra note"></textarea>
-
-    <button class="primary-btn" onclick="saveItem()">
-      Save Item
-    </button>
+    <button class="primary-btn" onclick="saveItem()">Save Item</button>
   </div>
 </div>
 
-<!-- STOCK ACTION MODAL -->
 <div class="modal-bg" id="actionModal">
   <div class="modal-box">
-    <div class="modal-head">
-      <h2 id="actionTitle">Stock Action</h2>
-      <button onclick="closeModal('actionModal')">×</button>
-    </div>
-
-    <input type="hidden" id="actionItemId">
-    <input type="hidden" id="actionType">
-
+    <div class="modal-head"><h2 id="actionTitle">Stock Action</h2><button onclick="closeModal('actionModal')">×</button></div>
+    <input type="hidden" id="actionItemId"><input type="hidden" id="actionType">
     <input id="actionQty" type="number" min="1" placeholder="Quantity">
     <input id="actionEvent" placeholder="Event name">
     <input id="actionWorker" placeholder="Worker / staff name">
     <textarea id="actionNote" placeholder="Note"></textarea>
-
-    <button class="primary-btn" onclick="saveStockAction()">
-      Save Record
-    </button>
+    <button class="primary-btn" onclick="saveStockAction()">Save Record</button>
   </div>
 </div>
 
 <script>
-const ITEM_KEY = "event_inventory_items";
-const HISTORY_KEY = "event_inventory_stock_history";
-
-function getData(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    console.error("Data read error:", error);
-    return [];
-  }
-}
-
-function setData(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.error("Data save error:", error);
-    alert("Data save nahi ho pa raha. Browser storage full ya blocked ho sakta hai.");
-  }
-}
-
-function toast(msg) {
-  alert(msg);
-}
-
-function createId() {
-  return Date.now() + Math.floor(Math.random() * 99999);
-}
-
-function normalizeItem(item) {
-  return {
-    id: item.id || createId(),
-    name: item.name || "",
-    section: item.section || "",
-    qty: Number(item.qty || 0),
-    min: Number(item.min || 1),
-    image: item.image || "",
-    location: item.location || "",
-    note: item.note || "",
-    lastEvent: item.lastEvent || "",
-    outOfStockAt: item.outOfStockAt || "",
-    outOfStockEvent: item.outOfStockEvent || ""
-  };
-}
-
-function initStockData() {
-  let items = getData(ITEM_KEY);
-
-  // Agar pehle se data hai, to usko overwrite nahi karna.
-  if (Array.isArray(items) && items.length > 0) {
-    const fixedItems = items.map(normalizeItem);
-    setData(ITEM_KEY, fixedItems);
-    return;
-  }
-
-  // Sirf first time demo stock add hoga.
-  const demoItems = [
-    {
-      id: createId(),
-      name: "Golden Frame",
-      section: "Frames",
-      qty: 25,
-      min: 5,
-      image: "",
-      location: "",
-      note: "Demo item",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "LED Par Light",
-      section: "Lights",
-      qty: 20,
-      min: 4,
-      image: "",
-      location: "",
-      note: "Demo item",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "Artificial Flower Set",
-      section: "Flower",
-      qty: 35,
-      min: 5,
-      image: "",
-      location: "",
-      note: "Demo item",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "White Draping Cloth",
-      section: "Cloth",
-      qty: 50,
-      min: 5,
-      image: "",
-      location: "",
-      note: "Cloth rack C1",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "Wedding Gate Prop",
-      section: "Large Props",
-      qty: 8,
-      min: 2,
-      image: "",
-      location: "",
-      note: "Large prop area",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "Ring Tray",
-      section: "Small Props",
-      qty: 15,
-      min: 3,
-      image: "",
-      location: "",
-      note: "Small props shelf",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    },
-    {
-      id: createId(),
-      name: "Centerpiece Stand",
-      section: "Table Decor Items",
-      qty: 25,
-      min: 5,
-      image: "",
-      location: "",
-      note: "Table decor stock",
-      lastEvent: "",
-      outOfStockAt: "",
-      outOfStockEvent: ""
-    }
-  ];
-
-  setData(ITEM_KEY, demoItems);
-}
-
-function renderStock() {
-  const grid = document.getElementById("stockGrid");
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const section = document.getElementById("sectionFilter").value;
-
-  let items = getData(ITEM_KEY).map(normalizeItem);
-
-  items = items.filter(item => {
-    const text = `
-      ${item.name}
-      ${item.section}
-      ${item.lastEvent || ""}
-      ${item.outOfStockEvent || ""}
-      ${item.location || ""}
-      ${item.note || ""}
-    `.toLowerCase();
-
-    const matchSearch = text.includes(search);
-    const matchSection = section ? item.section === section : true;
-
-    return matchSearch && matchSection;
-  });
-
-  if (items.length === 0) {
-    grid.innerHTML = `<div class="section-card">No stock found</div>`;
-    return;
-  }
-
-  grid.innerHTML = items.map(item => {
-    const qty = Number(item.qty || 0);
-    const min = Number(item.min || 1);
-
-    let badge = `<span class="badge ok">Available</span>`;
-
-    if (qty <= 0) {
-      badge = `<span class="badge danger">Out of Stock</span>`;
-    } else if (qty <= min) {
-      badge = `<span class="badge low">Low Stock</span>`;
-    }
-
-    const imageHtml = item.image && item.image.trim()
-      ? `<img class="stock-img" src="${item.image}" alt="${item.name}" onerror="this.outerHTML='<div class=&quot;no-image-box&quot;>Image Error</div>'">`
-      : `<div class="no-image-box">No Image</div>`;
-
-    return `
-      <div class="stock-card">
-        ${imageHtml}
-
-        <h3>${item.name}</h3>
-        <p class="stock-meta">
-          <b>Section:</b> ${item.section || "-"}<br>
-          <b>Location:</b> ${item.location || "-"}
-        </p>
-
-        <div class="badge-row">
-          ${badge}
-          <span class="badge ok">${item.section || "No Section"}</span>
-        </div>
-
-        <div class="stock-count">
-          <div>
-            <b>${qty}</b>
-            <span>Available</span>
-          </div>
-          <div>
-            <b>${min}</b>
-            <span>Alert Qty</span>
-          </div>
-        </div>
-
-        <p class="stock-meta">
-          <b>Last Event:</b> ${item.lastEvent || "-"}<br>
-          <b>Out Stock Date:</b> ${item.outOfStockAt || "-"}<br>
-          <b>Out Stock Event:</b> ${item.outOfStockEvent || "-"}
-        </p>
-
-        <p class="stock-meta">
-          <b>Note:</b> ${item.note || "-"}
-        </p>
-
-        <div class="card-btns">
-          <button class="success-btn" onclick="openActionModal(${item.id}, 'add')">
-            + Add
-          </button>
-
-          <button class="gray-btn" onclick="openActionModal(${item.id}, 'issue')">
-            Issue
-          </button>
-
-          <button class="primary-btn" onclick="openActionModal(${item.id}, 'return')">
-            Return
-          </button>
-
-          <button class="gray-btn" onclick="editItem(${item.id})">
-            Edit
-          </button>
-
-          <button class="danger-btn" onclick="deleteItem2(${item.id})">
-            Delete
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function openAddModal() {
-  document.getElementById("modalTitle").innerText = "Add Stock Item";
-  document.getElementById("editId").value = "";
-  document.getElementById("itemName2").value = "";
-  document.getElementById("itemSection2").value = "";
-  document.getElementById("itemImage2").value = "";
-  document.getElementById("itemQty2").value = "";
-  document.getElementById("itemMin2").value = "";
-  document.getElementById("itemLocation2").value = "";
-  document.getElementById("itemNote2").value = "";
-
-  document.getElementById("itemModal").classList.add("show");
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove("show");
-}
-
-function saveItem() {
-  const editId = document.getElementById("editId").value;
-
-  const name = document.getElementById("itemName2").value.trim();
-  const section = document.getElementById("itemSection2").value.trim();
-  const image = document.getElementById("itemImage2").value.trim();
-  const qtyRaw = document.getElementById("itemQty2").value;
-  const minRaw = document.getElementById("itemMin2").value;
-  const qty = Number(qtyRaw);
-  const min = Number(minRaw);
-  const location = document.getElementById("itemLocation2").value.trim();
-  const note = document.getElementById("itemNote2").value.trim();
-
-  if (!name) {
-    toast("Item name required");
-    return;
-  }
-
-  if (!section) {
-    toast("Section required");
-    return;
-  }
-
-  if (qtyRaw === "" || isNaN(qty) || qty < 0) {
-    toast("Valid quantity required");
-    return;
-  }
-
-  if (minRaw !== "" && (isNaN(min) || min < 0)) {
-    toast("Valid low stock alert quantity required");
-    return;
-  }
-
-  let items = getData(ITEM_KEY).map(normalizeItem);
-
-  if (editId) {
-    const item = items.find(i => String(i.id) === String(editId));
-
-    if (!item) {
-      toast("Item not found");
-      return;
-    }
-
-    item.name = name;
-    item.section = section;
-    item.image = image;
-    item.qty = qty;
-    item.min = minRaw === "" ? 1 : min;
-    item.location = location;
-    item.note = note;
-
-    if (qty <= 0 && !item.outOfStockAt) {
-      item.outOfStockAt = new Date().toLocaleString();
-      item.outOfStockEvent = item.lastEvent || "Manual Edit";
-    }
-
-    if (qty > 0) {
-      item.outOfStockAt = "";
-      item.outOfStockEvent = "";
-    }
-
-    addHistory({
-      itemName: name,
-      action: "EDIT",
-      qty: qty,
-      eventName: "-",
-      worker: "Admin",
-      note: "Item details edited"
-    });
-
-  } else {
-    const newItem = {
-      id: createId(),
-      name,
-      section,
-      image,
-      qty,
-      min: minRaw === "" ? 1 : min,
-      location,
-      note,
-      lastEvent: "",
-      outOfStockAt: qty <= 0 ? new Date().toLocaleString() : "",
-      outOfStockEvent: qty <= 0 ? "New stock added as zero" : ""
-    };
-
-    items.push(newItem);
-
-    addHistory({
-      itemName: name,
-      action: "NEW STOCK",
-      qty,
-      eventName: "-",
-      worker: "Admin",
-      note: "New item added"
-    });
-  }
-
-  setData(ITEM_KEY, items);
-
-  closeModal("itemModal");
-  renderStock();
-  renderHistory();
-
-  toast("Item saved successfully");
-}
-
-function editItem(id) {
-  const items = getData(ITEM_KEY).map(normalizeItem);
-  const item = items.find(i => String(i.id) === String(id));
-
-  if (!item) {
-    toast("Item not found");
-    return;
-  }
-
-  document.getElementById("modalTitle").innerText = "Edit Stock Item";
-  document.getElementById("editId").value = item.id;
-  document.getElementById("itemName2").value = item.name;
-  document.getElementById("itemSection2").value = item.section;
-  document.getElementById("itemImage2").value = item.image || "";
-  document.getElementById("itemQty2").value = item.qty;
-  document.getElementById("itemMin2").value = item.min;
-  document.getElementById("itemLocation2").value = item.location || "";
-  document.getElementById("itemNote2").value = item.note || "";
-
-  document.getElementById("itemModal").classList.add("show");
-}
-
-function deleteItem2(id) {
-  if (!confirm("Delete this stock item?")) return;
-
-  let items = getData(ITEM_KEY).map(normalizeItem);
-  const item = items.find(i => String(i.id) === String(id));
-
-  if (!item) {
-    toast("Item not found");
-    return;
-  }
-
-  items = items.filter(i => String(i.id) !== String(id));
-  setData(ITEM_KEY, items);
-
-  addHistory({
-    itemName: item.name,
-    action: "DELETE",
-    qty: item.qty,
-    eventName: "-",
-    worker: "Admin",
-    note: "Item deleted"
-  });
-
-  renderStock();
-  renderHistory();
-  toast("Item deleted");
-}
-
-function openActionModal(id, type) {
-  const items = getData(ITEM_KEY).map(normalizeItem);
-  const item = items.find(i => String(i.id) === String(id));
-
-  if (!item) {
-    toast("Item not found");
-    return;
-  }
-
-  document.getElementById("actionItemId").value = id;
-  document.getElementById("actionType").value = type;
-  document.getElementById("actionQty").value = "";
-  document.getElementById("actionEvent").value = "";
-  document.getElementById("actionWorker").value = "";
-  document.getElementById("actionNote").value = "";
-
-  let title = "";
-
-  if (type === "add") title = `Add Stock - ${item.name}`;
-  if (type === "issue") title = `Issue Stock - ${item.name}`;
-  if (type === "return") title = `Return Stock - ${item.name}`;
-
-  document.getElementById("actionTitle").innerText = title;
-  document.getElementById("actionModal").classList.add("show");
-}
-
-function saveStockAction() {
-  const id = Number(document.getElementById("actionItemId").value);
-  const type = document.getElementById("actionType").value;
-  const qty = Number(document.getElementById("actionQty").value);
-  const eventName = document.getElementById("actionEvent").value.trim();
-  const worker = document.getElementById("actionWorker").value.trim();
-  const note = document.getElementById("actionNote").value.trim();
-
-  if (!qty || qty <= 0 || isNaN(qty)) {
-    toast("Valid quantity required");
-    return;
-  }
-
-  let items = getData(ITEM_KEY).map(normalizeItem);
-  const item = items.find(i => Number(i.id) === Number(id));
-
-  if (!item) {
-    toast("Item not found");
-    return;
-  }
-
-  if (type === "issue") {
-    if (qty > Number(item.qty)) {
-      toast("Available stock se jyada issue nahi ho sakta");
-      return;
-    }
-
-    item.qty = Number(item.qty) - qty;
-    item.lastEvent = eventName || "-";
-
-    if (Number(item.qty) <= 0) {
-      item.outOfStockAt = new Date().toLocaleString();
-      item.outOfStockEvent = eventName || "-";
-    }
-
-    addHistory({
-      itemName: item.name,
-      action: "ISSUE",
-      qty,
-      eventName: eventName || "-",
-      worker: worker || "-",
-      note: note || "Stock issued"
-    });
-  }
-
-  if (type === "add") {
-    item.qty = Number(item.qty) + qty;
-
-    if (Number(item.qty) > 0) {
-      item.outOfStockAt = "";
-      item.outOfStockEvent = "";
-    }
-
-    addHistory({
-      itemName: item.name,
-      action: "ADD",
-      qty,
-      eventName: eventName || "-",
-      worker: worker || "Admin",
-      note: note || "Stock added"
-    });
-  }
-
-  if (type === "return") {
-    item.qty = Number(item.qty) + qty;
-
-    if (Number(item.qty) > 0) {
-      item.outOfStockAt = "";
-      item.outOfStockEvent = "";
-    }
-
-    addHistory({
-      itemName: item.name,
-      action: "RETURN",
-      qty,
-      eventName: eventName || "-",
-      worker: worker || "-",
-      note: note || "Stock returned"
-    });
-  }
-
-  setData(ITEM_KEY, items);
-
-  closeModal("actionModal");
-  renderStock();
-  renderHistory();
-  toast("Stock record saved");
-}
-
-function addHistory(data) {
-  let history = getData(HISTORY_KEY);
-
-  history.push({
-    id: createId(),
-    date: new Date().toLocaleString(),
-    itemName: data.itemName || "-",
-    action: data.action || "-",
-    qty: data.qty || 0,
-    eventName: data.eventName || "-",
-    worker: data.worker || "-",
-    note: data.note || "-"
-  });
-
-  setData(HISTORY_KEY, history);
-}
-
-function renderHistory() {
-  const tbody = document.getElementById("historyTable");
-  let history = getData(HISTORY_KEY);
-
-  if (history.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7">No history found</td></tr>`;
-    return;
-  }
-
-  history = history.sort((a, b) => Number(b.id) - Number(a.id));
-
-  tbody.innerHTML = history.map(h => `
-    <tr>
-      <td>${h.date || "-"}</td>
-      <td>${h.itemName || "-"}</td>
-      <td><span class="badge ok">${h.action || "-"}</span></td>
-      <td>${h.qty || 0}</td>
-      <td>${h.eventName || "-"}</td>
-      <td>${h.worker || "-"}</td>
-      <td>${h.note || "-"}</td>
-    </tr>
-  `).join("");
-}
-
-function exportCSV() {
-  const history = getData(HISTORY_KEY);
-
-  if (history.length === 0) {
-    toast("No history to export");
-    return;
-  }
-
-  let csv = "Date,Item,Action,Qty,Event,Worker,Note\n";
-
-  history.forEach(h => {
-    csv += `"${h.date || ""}","${h.itemName || ""}","${h.action || ""}","${h.qty || 0}","${h.eventName || ""}","${h.worker || ""}","${h.note || ""}"\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "stock-history.csv";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  initStockData();
-  renderStock();
-  renderHistory();
-});
+let stockItems=[];let stockHistory=[];const stockRef=db.collection("stockItems");const historyRef=db.collection("stockHistory");
+function toast(msg){alert(msg)}function nowText(){return new Date().toLocaleString()}function safeNumber(value,fallback=0){const n=Number(value);return isNaN(n)?fallback:n}
+function escapeHtml(value){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function normalizeItem(doc){const data=doc.data?doc.data():doc;return{id:doc.id||data.id||"",name:data.name||"",section:data.section||"",qty:safeNumber(data.qty,0),min:safeNumber(data.min,1),image:data.image||"",location:data.location||"",note:data.note||"",lastEvent:data.lastEvent||"",outOfStockAt:data.outOfStockAt||"",outOfStockEvent:data.outOfStockEvent||"",createdAt:data.createdAt||null,updatedAt:data.updatedAt||null}}
+async function seedDemoStockIfEmpty(){const snapshot=await stockRef.limit(1).get();if(!snapshot.empty)return;const demoItems=[{name:"Golden Frame",section:"Frames",qty:25,min:5,image:"",location:"",note:"Demo item"},{name:"LED Par Light",section:"Lights",qty:20,min:4,image:"",location:"",note:"Demo item"},{name:"Artificial Flower Set",section:"Flower",qty:35,min:5,image:"",location:"",note:"Demo item"},{name:"White Draping Cloth",section:"Cloth",qty:50,min:5,image:"",location:"",note:"Cloth rack C1"},{name:"Wedding Gate Prop",section:"Large Props",qty:8,min:2,image:"",location:"",note:"Large prop area"},{name:"Ring Tray",section:"Small Props",qty:15,min:3,image:"",location:"",note:"Small props shelf"},{name:"Centerpiece Stand",section:"Table Decor Items",qty:25,min:5,image:"",location:"",note:"Table decor stock"}];const batch=db.batch();demoItems.forEach(item=>{const ref=stockRef.doc();batch.set(ref,{...item,lastEvent:"",outOfStockAt:"",outOfStockEvent:"",createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()})});await batch.commit()}
+function listenStockItems(){stockRef.orderBy("name").onSnapshot(snapshot=>{stockItems=snapshot.docs.map(normalizeItem);renderStock()},error=>{console.error(error);document.getElementById("stockGrid").innerHTML=`<div class="section-card">Firebase stock load nahi ho pa raha. Firestore Rules aur firebase-config.js check karo.</div>`})}
+function listenHistory(){historyRef.orderBy("createdAt","desc").limit(200).onSnapshot(snapshot=>{stockHistory=snapshot.docs.map(doc=>{const data=doc.data();return{id:doc.id,date:data.date||"-",itemId:data.itemId||"",itemName:data.itemName||"-",action:data.action||"-",qty:safeNumber(data.qty,0),eventName:data.eventName||"-",worker:data.worker||"-",note:data.note||"-"}});renderHistory()},error=>{console.error(error);document.getElementById("historyTable").innerHTML=`<tr><td colspan="7">Firebase history load nahi ho pa raha.</td></tr>`})}
+function renderStock(){const grid=document.getElementById("stockGrid");const search=(document.getElementById("searchInput").value||"").toLowerCase();const section=document.getElementById("sectionFilter").value;let items=[...stockItems].filter(item=>{const text=`${item.name} ${item.section} ${item.lastEvent||""} ${item.outOfStockEvent||""} ${item.location||""} ${item.note||""}`.toLowerCase();return text.includes(search)&&(section?item.section===section:true)});if(items.length===0){grid.innerHTML=`<div class="section-card">No stock found</div>`;return}grid.innerHTML=items.map(item=>{const qty=safeNumber(item.qty,0);const min=safeNumber(item.min,1);let badge=`<span class="badge ok">Available</span>`;if(qty<=0)badge=`<span class="badge danger">Out of Stock</span>`;else if(qty<=min)badge=`<span class="badge low">Low Stock</span>`;const imageHtml=item.image&&item.image.trim()?`<img class="stock-img" src="${item.image}" alt="${escapeHtml(item.name)}" onerror="this.outerHTML='<div class=&quot;no-image-box&quot;>Image Error</div>'">`:`<div class="no-image-box">No Image</div>`;return `<div class="stock-card">${imageHtml}<h3>${escapeHtml(item.name)}</h3><p class="stock-meta"><b>Section:</b> ${escapeHtml(item.section||"-")}<br><b>Location:</b> ${escapeHtml(item.location||"-")}</p><div class="badge-row">${badge}<span class="badge ok">${escapeHtml(item.section||"No Section")}</span></div><div class="stock-count"><div><b>${qty}</b><span>Available</span></div><div><b>${min}</b><span>Alert Qty</span></div></div><p class="stock-meta"><b>Last Event:</b> ${escapeHtml(item.lastEvent||"-")}<br><b>Out Stock Date:</b> ${escapeHtml(item.outOfStockAt||"-")}<br><b>Out Stock Event:</b> ${escapeHtml(item.outOfStockEvent||"-")}</p><p class="stock-meta"><b>Note:</b> ${escapeHtml(item.note||"-")}</p><div class="card-btns"><button class="success-btn" onclick="openActionModal('${item.id}','add')">+ Add</button><button class="gray-btn" onclick="openActionModal('${item.id}','issue')">Issue</button><button class="primary-btn" onclick="openActionModal('${item.id}','return')">Return</button><button class="gray-btn" onclick="editItem('${item.id}')">Edit</button><button class="danger-btn" onclick="deleteItem2('${item.id}')">Delete</button></div></div>`}).join("")}
+function openAddModal(){document.getElementById("modalTitle").innerText="Add Stock Item";document.getElementById("editId").value="";document.getElementById("itemName2").value="";document.getElementById("itemSection2").value="";document.getElementById("itemImage2").value="";document.getElementById("itemQty2").value="";document.getElementById("itemMin2").value="";document.getElementById("itemLocation2").value="";document.getElementById("itemNote2").value="";document.getElementById("itemModal").classList.add("show")}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+async function saveItem(){const editId=document.getElementById("editId").value;const name=document.getElementById("itemName2").value.trim();const section=document.getElementById("itemSection2").value.trim();const image=document.getElementById("itemImage2").value.trim();const qtyRaw=document.getElementById("itemQty2").value;const minRaw=document.getElementById("itemMin2").value;const qty=Number(qtyRaw);const min=Number(minRaw);const location=document.getElementById("itemLocation2").value.trim();const note=document.getElementById("itemNote2").value.trim();if(!name){toast("Item name required");return}if(!section){toast("Section required");return}if(qtyRaw===""||isNaN(qty)||qty<0){toast("Valid quantity required");return}if(minRaw!==""&&(isNaN(min)||min<0)){toast("Valid low stock alert quantity required");return}try{if(editId){const oldItem=stockItems.find(i=>i.id===editId);let outOfStockAt=oldItem?.outOfStockAt||"";let outOfStockEvent=oldItem?.outOfStockEvent||"";if(qty<=0&&!outOfStockAt){outOfStockAt=nowText();outOfStockEvent=oldItem?.lastEvent||"Manual Edit"}if(qty>0){outOfStockAt="";outOfStockEvent=""}await stockRef.doc(editId).update({name,section,image,qty,min:minRaw===""?1:min,location,note,outOfStockAt,outOfStockEvent,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await addHistory({itemId:editId,itemName:name,action:"EDIT",qty,eventName:"-",worker:"Admin",note:"Item details edited"})}else{const outOfStockAt=qty<=0?nowText():"";const outOfStockEvent=qty<=0?"New stock added as zero":"";const docRef=await stockRef.add({name,section,image,qty,min:minRaw===""?1:min,location,note,lastEvent:"",outOfStockAt,outOfStockEvent,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await addHistory({itemId:docRef.id,itemName:name,action:"NEW STOCK",qty,eventName:"-",worker:"Admin",note:"New item added"})}closeModal("itemModal");toast("Item saved in Firebase successfully")}catch(error){console.error(error);toast("Firebase me item save nahi hua. Firestore Rules check karo.")}}
+function editItem(id){const item=stockItems.find(i=>i.id===id);if(!item){toast("Item not found");return}document.getElementById("modalTitle").innerText="Edit Stock Item";document.getElementById("editId").value=item.id;document.getElementById("itemName2").value=item.name;document.getElementById("itemSection2").value=item.section;document.getElementById("itemImage2").value=item.image||"";document.getElementById("itemQty2").value=item.qty;document.getElementById("itemMin2").value=item.min;document.getElementById("itemLocation2").value=item.location||"";document.getElementById("itemNote2").value=item.note||"";document.getElementById("itemModal").classList.add("show")}
+async function deleteItem2(id){if(!confirm("Delete this stock item?"))return;const item=stockItems.find(i=>i.id===id);if(!item){toast("Item not found");return}try{await stockRef.doc(id).delete();await addHistory({itemId:id,itemName:item.name,action:"DELETE",qty:item.qty,eventName:"-",worker:"Admin",note:"Item deleted"});toast("Item deleted from Firebase")}catch(error){console.error(error);toast("Item delete nahi hua. Firestore Rules check karo.")}}
+function openActionModal(id,type){const item=stockItems.find(i=>i.id===id);if(!item){toast("Item not found");return}document.getElementById("actionItemId").value=id;document.getElementById("actionType").value=type;document.getElementById("actionQty").value="";document.getElementById("actionEvent").value="";document.getElementById("actionWorker").value="";document.getElementById("actionNote").value="";let title="";if(type==="add")title=`Add Stock - ${item.name}`;if(type==="issue")title=`Issue Stock - ${item.name}`;if(type==="return")title=`Return Stock - ${item.name}`;document.getElementById("actionTitle").innerText=title;document.getElementById("actionModal").classList.add("show")}
+async function saveStockAction(){const id=document.getElementById("actionItemId").value;const type=document.getElementById("actionType").value;const qty=Number(document.getElementById("actionQty").value);const eventName=document.getElementById("actionEvent").value.trim();const worker=document.getElementById("actionWorker").value.trim();const note=document.getElementById("actionNote").value.trim();if(!qty||qty<=0||isNaN(qty)){toast("Valid quantity required");return}const item=stockItems.find(i=>i.id===id);if(!item){toast("Item not found");return}let newQty=Number(item.qty);let updateData={};let actionLabel="";if(type==="issue"){if(qty>Number(item.qty)){toast("Available stock se jyada issue nahi ho sakta");return}newQty=Number(item.qty)-qty;actionLabel="ISSUE";updateData={qty:newQty,lastEvent:eventName||"-",outOfStockAt:newQty<=0?nowText():"",outOfStockEvent:newQty<=0?(eventName||"-"):"",updatedAt:firebase.firestore.FieldValue.serverTimestamp()}}if(type==="add"){newQty=Number(item.qty)+qty;actionLabel="ADD";updateData={qty:newQty,outOfStockAt:"",outOfStockEvent:"",updatedAt:firebase.firestore.FieldValue.serverTimestamp()}}if(type==="return"){newQty=Number(item.qty)+qty;actionLabel="RETURN";updateData={qty:newQty,outOfStockAt:"",outOfStockEvent:"",updatedAt:firebase.firestore.FieldValue.serverTimestamp()}}try{await stockRef.doc(id).update(updateData);await addHistory({itemId:id,itemName:item.name,action:actionLabel,qty,eventName:eventName||"-",worker:worker||(type==="add"?"Admin":"-"),note:note||`Stock ${actionLabel.toLowerCase()}`});closeModal("actionModal");toast("Stock record saved in Firebase")}catch(error){console.error(error);toast("Firebase me stock record save nahi hua. Firestore Rules check karo.")}}
+async function addHistory(data){await historyRef.add({itemId:data.itemId||"",itemName:data.itemName||"-",action:data.action||"-",qty:safeNumber(data.qty,0),eventName:data.eventName||"-",worker:data.worker||"-",note:data.note||"-",date:nowText(),createdAt:firebase.firestore.FieldValue.serverTimestamp()})}
+function renderHistory(){const tbody=document.getElementById("historyTable");if(stockHistory.length===0){tbody.innerHTML=`<tr><td colspan="7">No history found</td></tr>`;return}tbody.innerHTML=stockHistory.map(h=>`<tr><td>${escapeHtml(h.date||"-")}</td><td>${escapeHtml(h.itemName||"-")}</td><td><span class="badge ok">${escapeHtml(h.action||"-")}</span></td><td>${safeNumber(h.qty,0)}</td><td>${escapeHtml(h.eventName||"-")}</td><td>${escapeHtml(h.worker||"-")}</td><td>${escapeHtml(h.note||"-")}</td></tr>`).join("")}
+function exportCSV(){if(stockHistory.length===0){toast("No history to export");return}let csv="Date,Item,Action,Qty,Event,Worker,Note\n";stockHistory.forEach(h=>{csv+=`"${h.date||""}","${h.itemName||""}","${h.action||""}","${h.qty||0}","${h.eventName||""}","${h.worker||""}","${h.note||""}"\n`});const blob=new Blob([csv],{type:"text/csv"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="stock-history.csv";a.click();URL.revokeObjectURL(url)}
+document.addEventListener("DOMContentLoaded",async()=>{if(typeof firebase==="undefined"||typeof db==="undefined"){document.getElementById("stockGrid").innerHTML=`<div class="section-card">Firebase load nahi hua. Check: firebase scripts + firebase-config.js.</div>`;return}try{await seedDemoStockIfEmpty();listenStockItems();listenHistory()}catch(error){console.error(error);document.getElementById("stockGrid").innerHTML=`<div class="section-card">Firebase connect nahi ho pa raha. Firestore enable karo aur Rules publish karo.</div>`}});
 </script>
-
 </body>
 </html>
