@@ -6,9 +6,12 @@
   <title>VLV EVENTS INVENTORY</title>
 
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Firebase scripts: order important hai -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -36,33 +39,13 @@
     <button onclick="toggleDrawer()">×</button>
   </div>
 
-  <button onclick="showPage('home')">
-    <i class="fa-solid fa-house"></i> Dashboard
-  </button>
-
-  <button onclick="location.href='stock.html'">
-  <i class="fa-solid fa-boxes-stacked"></i> Stock Management
-</button>
-
-  <button onclick="showPage('booking')">
-    <i class="fa-solid fa-cart-flatbed"></i> Book Items
-  </button>
-
-  <button onclick="showPage('requests')">
-    <i class="fa-solid fa-list-check"></i> Requests
-  </button>
-
-  <button onclick="showPage('workers')">
-    <i class="fa-solid fa-users-gear"></i> Workers
-  </button>
-
-  <button onclick="showPage('reports')">
-    <i class="fa-solid fa-chart-line"></i> Reports
-  </button>
-
-  <button onclick="logout()">
-    <i class="fa-solid fa-right-from-bracket"></i> Logout
-  </button>
+  <button onclick="showPage('home')"><i class="fa-solid fa-house"></i> Dashboard</button>
+  <button onclick="location.href='stock.html'"><i class="fa-solid fa-boxes-stacked"></i> Stock Management</button>
+  <button onclick="showPage('booking')"><i class="fa-solid fa-cart-flatbed"></i> Book Items</button>
+  <button onclick="showPage('requests')"><i class="fa-solid fa-list-check"></i> Requests</button>
+  <button onclick="showPage('workers')"><i class="fa-solid fa-users-gear"></i> Workers</button>
+  <button onclick="showPage('reports')"><i class="fa-solid fa-chart-line"></i> Reports</button>
+  <button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
 </aside>
 
 <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
@@ -72,8 +55,8 @@
   <!-- AUTH PAGE -->
   <section class="auth-page" id="authPage">
     <div class="auth-card">
-      <div class="logo-circle">
-        <i class="fa-solid fa-warehouse"></i>
+      <div class="login-logo-box">
+        <img src="vlv-logo.jpg" alt="VLV Events Logo">
       </div>
 
       <h1>VLV EVENTS INVENTORY</h1>
@@ -87,28 +70,16 @@
       <div id="loginBox">
         <input id="loginPhone" placeholder="Phone number" />
         <input id="loginPassword" type="password" placeholder="Password" />
-
-        <button class="primary-btn" onclick="loginUser()">
-          Login
-        </button>
-
-        <div class="hint">
-  Only approved staff can access the inventory system.
-</div>
+        <button class="primary-btn" onclick="loginUser()">Login</button>
+        <div class="hint">Admin demo login: Phone <b>admin</b> | Password <b>1234</b></div>
       </div>
 
       <div id="registerBox" class="hidden">
         <input id="regName" placeholder="Worker name" />
         <input id="regPhone" placeholder="Phone number" />
         <input id="regPassword" type="password" placeholder="Create password" />
-
-        <button class="primary-btn" onclick="registerWorker()">
-          Send Approval Request
-        </button>
-
-        <div class="hint">
-          Admin approve karega tabhi worker login kar payega.
-        </div>
+        <button class="primary-btn" onclick="registerWorker()">Send Approval Request</button>
+        <div class="hint">Admin approve karega tabhi worker login kar payega.</div>
       </div>
     </div>
   </section>
@@ -127,226 +98,394 @@
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card">
-          <i class="fa-solid fa-boxes-stacked"></i>
-          <h3 id="totalItems">0</h3>
-          <p>Total Items</p>
-        </div>
-
-        <div class="stat-card">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <h3 id="lowStock">0</h3>
-          <p>Low Stock</p>
-        </div>
-
-        <div class="stat-card">
-          <i class="fa-solid fa-clock"></i>
-          <h3 id="pendingRequests">0</h3>
-          <p>Pending Requests</p>
-        </div>
-
-        <div class="stat-card">
-          <i class="fa-solid fa-users"></i>
-          <h3 id="totalWorkers">0</h3>
-          <p>Workers</p>
-        </div>
+        <div class="stat-card"><i class="fa-solid fa-boxes-stacked"></i><h3 id="totalItems">0</h3><p>Total Items</p></div>
+        <div class="stat-card"><i class="fa-solid fa-triangle-exclamation"></i><h3 id="lowStock">0</h3><p>Low Stock</p></div>
+        <div class="stat-card"><i class="fa-solid fa-clock"></i><h3 id="pendingRequests">0</h3><p>Pending Requests</p></div>
+        <div class="stat-card"><i class="fa-solid fa-users"></i><h3 id="totalWorkers">0</h3><p>Workers</p></div>
       </div>
 
       <div class="section-card">
         <h2>Smart Inventory Sections</h2>
         <div class="section-tags clickable-sections">
-  <button onclick="openSection('Frames')">
-    <i class="fa-solid fa-border-all"></i>
-    Frames
-  </button>
-
-  <button onclick="openSection('Lights')">
-    <i class="fa-solid fa-lightbulb"></i>
-    Lights
-  </button>
-
-  <button onclick="openSection('Flower')">
-    <i class="fa-solid fa-spa"></i>
-    Flower
-  </button>
-
-  <button onclick="openSection('Cloth')">
-    <i class="fa-solid fa-shirt"></i>
-    Cloth
-  </button>
-
-  <button onclick="openSection('Large Props')">
-    <i class="fa-solid fa-couch"></i>
-    Large Props
-  </button>
-
-  <button onclick="openSection('Small Props')">
-    <i class="fa-solid fa-cubes"></i>
-    Small Props
-  </button>
-
-  <button onclick="openSection('Table Decor Items')">
-    <i class="fa-solid fa-champagne-glasses"></i>
-    Table Decor Items
-  </button>
-</div>
+          <button onclick="openSection('Frames')"><i class="fa-solid fa-border-all"></i> Frames</button>
+          <button onclick="openSection('Lights')"><i class="fa-solid fa-lightbulb"></i> Lights</button>
+          <button onclick="openSection('Flower')"><i class="fa-solid fa-spa"></i> Flower</button>
+          <button onclick="openSection('Cloth')"><i class="fa-solid fa-shirt"></i> Cloth</button>
+          <button onclick="openSection('Large Props')"><i class="fa-solid fa-couch"></i> Large Props</button>
+          <button onclick="openSection('Small Props')"><i class="fa-solid fa-cubes"></i> Small Props</button>
+          <button onclick="openSection('Table Decor Items')"><i class="fa-solid fa-champagne-glasses"></i> Table Decor Items</button>
+        </div>
       </div>
     </section>
 
     <!-- STOCK -->
     <section class="page" id="stock">
-      <div class="page-head">
-        <div>
-          <h1>Stock Management</h1>
-          <p>Add, search and manage available event items.</p>
-        </div>
-      </div>
-
-      <div class="section-card admin-only">
-        <h2>Add New Stock Item</h2>
-
-        <div class="form-grid">
-          <input id="itemName" placeholder="Item name e.g. Golden Chair" />
-          <input id="itemSection" placeholder="Section e.g. Frames" />
-          <input id="itemQty" type="number" placeholder="Quantity" />
-          <input id="itemMin" type="number" placeholder="Low stock alert qty" />
-        </div>
-
-        <textarea id="itemNote" placeholder="Note / location / rack number"></textarea>
-
-        <button class="primary-btn" onclick="addItem()">
-          Add Item
-        </button>
-      </div>
-
-      <div class="toolbar stock-toolbar">
-  <input id="stockSearch" oninput="renderStock()" placeholder="Search item or section..." />
-
-  <button class="gray-btn" onclick="clearStockFilter()">
-    All Stock
-  </button>
-</div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Section</th>
-              <th>Available</th>
-              <th>Alert</th>
-              <th>Note</th>
-              <th class="admin-only">Action</th>
-            </tr>
-          </thead>
-          <tbody id="stockTable"></tbody>
-        </table>
+      <div class="page-head"><div><h1>Stock Management</h1><p>Add, search and manage available event items.</p></div></div>
+      <div class="section-card">
+        <h2>Stock Management</h2>
+        <p class="muted">Detailed image-based stock ke liye Stock Management page open karo.</p>
+        <button class="primary-btn" onclick="location.href='stock.html'">Open Full Stock Page</button>
       </div>
     </section>
 
     <!-- BOOKING -->
     <section class="page" id="booking">
-      <div class="page-head">
-        <div>
-          <h1>Book / Issue Items</h1>
-          <p>Worker yahan se event ke liye saman request karega.</p>
-        </div>
-      </div>
-
+      <div class="page-head"><div><h1>Book / Issue Items</h1><p>Worker yahan se event ke liye saman request karega.</p></div></div>
       <div class="section-card">
         <h2>Create Booking Request</h2>
-
         <div class="form-grid">
           <input id="eventName" placeholder="Event name e.g. Wedding at Patna" />
           <input id="eventLocation" placeholder="Event location" />
         </div>
-
         <textarea id="bookingNote" placeholder="Extra note"></textarea>
       </div>
-
       <div class="section-card date-stock-panel">
-        <div>
-          <h2>Check Stock by Date</h2>
-          <p class="muted">Select event date range to see date-wise available stock.</p>
-        </div>
-
+        <div><h2>Check Stock by Date</h2><p class="muted">Select event date range to see date-wise available stock.</p></div>
         <div class="date-stock-grid">
-          <label>
-            <span>From Date</span>
-            <input id="eventDate" type="date" onchange="renderBookingItems()" />
-          </label>
-          <label>
-            <span>To Date</span>
-            <input id="returnDate" type="date" onchange="renderBookingItems()" />
-          </label>
-          <button class="primary-btn" onclick="checkDateStock()">
-            Check Availability
-          </button>
+          <label><span>From Date</span><input id="eventDate" type="date" onchange="renderBookingItems && renderBookingItems()" /></label>
+          <label><span>To Date</span><input id="returnDate" type="date" onchange="renderBookingItems && renderBookingItems()" /></label>
+          <button class="primary-btn" onclick="checkDateStock && checkDateStock()">Check Availability</button>
         </div>
       </div>
-
-      <div class="toolbar">
-        <input id="bookingSearch" oninput="renderBookingItems()" placeholder="Search item to book..." />
-      </div>
-
+      <div class="toolbar"><input id="bookingSearch" oninput="renderBookingItems && renderBookingItems()" placeholder="Search item to book..." /></div>
       <div id="bookingItems" class="item-grid"></div>
-
-      <div class="section-card">
-        <h2>Selected Items</h2>
-        <div id="cartList" class="cart-list"></div>
-
-        <button class="primary-btn" onclick="submitBooking()">
-          Submit Booking Request
-        </button>
-      </div>
+      <div class="section-card"><h2>Selected Items</h2><div id="cartList" class="cart-list"></div><button class="primary-btn" onclick="submitBooking && submitBooking()">Submit Booking Request</button></div>
     </section>
 
     <!-- REQUESTS -->
     <section class="page" id="requests">
-      <div class="page-head">
-        <div>
-          <h1>Issue / Return Requests</h1>
-          <p>Admin approval date-wise stock reserve karega.</p>
-        </div>
-      </div>
-
+      <div class="page-head"><div><h1>Issue / Return Requests</h1><p>Booking request yahan show hoga.</p></div></div>
       <div id="requestList" class="request-list"></div>
     </section>
 
     <!-- WORKERS -->
     <section class="page" id="workers">
-      <div class="page-head">
-        <div>
-          <h1>Workers</h1>
-          <p>Worker account approval panel.</p>
-        </div>
-      </div>
-
+      <div class="page-head"><div><h1>Workers</h1><p>Worker account approval panel.</p></div></div>
       <div id="workerList" class="request-list"></div>
     </section>
 
     <!-- REPORTS -->
     <section class="page" id="reports">
-      <div class="page-head">
-        <div>
-          <h1>Reports</h1>
-          <p>Owner ko dikhane ke liye clean inventory history.</p>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h2>Inventory Movement History</h2>
-        <div id="reportList" class="report-list"></div>
-      </div>
+      <div class="page-head"><div><h1>Reports</h1><p>Owner ko dikhane ke liye clean inventory history.</p></div></div>
+      <div class="section-card"><h2>Inventory Movement History</h2><div id="reportList" class="report-list"></div></div>
     </section>
-
   </section>
-
 </main>
 
 <div class="toast" id="toast"></div>
 
-
 <script src="common.js"></script>
+
+<!-- Firebase Worker Approval Fix: common.js ke baad load hona chahiye -->
+<script>
+const ADMIN_PHONE = "admin";
+const ADMIN_PASSWORD = "1234";
+let currentUser = null;
+let workerRequests = [];
+let approvedWorkers = [];
+let unsubscribeWorkerRequests = null;
+let unsubscribeApprovedWorkers = null;
+
+const workerRequestRef = db.collection("workerRequests");
+const approvedWorkerRef = db.collection("approvedWorkers");
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  if (toast) {
+    toast.innerText = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2200);
+  } else {
+    alert(msg);
+  }
+}
+
+function switchAuth(type) {
+  const loginBox = document.getElementById("loginBox");
+  const registerBox = document.getElementById("registerBox");
+  const tabs = document.querySelectorAll(".tabs button");
+
+  if (type === "login") {
+    loginBox.classList.remove("hidden");
+    registerBox.classList.add("hidden");
+    tabs[0].classList.add("active");
+    tabs[1].classList.remove("active");
+  } else {
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+    tabs[0].classList.remove("active");
+    tabs[1].classList.add("active");
+  }
+}
+
+async function registerWorker() {
+  const name = document.getElementById("regName").value.trim();
+  const phone = document.getElementById("regPhone").value.trim();
+  const password = document.getElementById("regPassword").value.trim();
+
+  if (!name || !phone || !password) {
+    showToast("Name, phone aur password required hai");
+    return;
+  }
+
+  try {
+    const approvedSnap = await approvedWorkerRef.where("phone", "==", phone).limit(1).get();
+    if (!approvedSnap.empty) {
+      showToast("Ye worker already approved hai. Login karo.");
+      switchAuth("login");
+      return;
+    }
+
+    const pendingSnap = await workerRequestRef.where("phone", "==", phone).where("status", "==", "pending").limit(1).get();
+    if (!pendingSnap.empty) {
+      showToast("Is phone ka request already pending hai");
+      return;
+    }
+
+    await workerRequestRef.add({
+      name,
+      phone,
+      password,
+      status: "pending",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdDate: new Date().toLocaleString()
+    });
+
+    document.getElementById("regName").value = "";
+    document.getElementById("regPhone").value = "";
+    document.getElementById("regPassword").value = "";
+
+    showToast("Worker request Firebase me save ho gaya. Admin approve karega.");
+    switchAuth("login");
+  } catch (error) {
+    console.error(error);
+    showToast("Request save nahi hua. Firebase rules/config check karo.");
+  }
+}
+
+async function loginUser() {
+  const phone = document.getElementById("loginPhone").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if (!phone || !password) {
+    showToast("Phone aur password enter karo");
+    return;
+  }
+
+  if (phone === ADMIN_PHONE && password === ADMIN_PASSWORD) {
+    currentUser = { name: "Admin", phone: "admin", role: "admin" };
+    afterLogin();
+    return;
+  }
+
+  try {
+    const snap = await approvedWorkerRef.where("phone", "==", phone).where("password", "==", password).limit(1).get();
+    if (snap.empty) {
+      showToast("Login failed. Admin approval pending ya wrong password.");
+      return;
+    }
+
+    const doc = snap.docs[0];
+    currentUser = { id: doc.id, ...doc.data(), role: "worker" };
+    afterLogin();
+  } catch (error) {
+    console.error(error);
+    showToast("Login check nahi hua. Firebase config/rules check karo.");
+  }
+}
+
+function afterLogin() {
+  document.getElementById("authPage").classList.add("hidden");
+  document.getElementById("appPage").classList.remove("hidden");
+  document.getElementById("welcomeName").innerText = currentUser.name || "Admin";
+  document.getElementById("userPill").innerHTML = `<i class="fa-solid fa-user"></i><span>${currentUser.name || "User"}</span>`;
+
+  document.querySelectorAll(".admin-only").forEach(el => {
+    el.style.display = currentUser.role === "admin" ? "" : "none";
+  });
+
+  listenWorkersFirebase();
+  showPage("home");
+}
+
+function logout() {
+  currentUser = null;
+  if (unsubscribeWorkerRequests) unsubscribeWorkerRequests();
+  if (unsubscribeApprovedWorkers) unsubscribeApprovedWorkers();
+  document.getElementById("authPage").classList.remove("hidden");
+  document.getElementById("appPage").classList.add("hidden");
+  document.getElementById("userPill").innerHTML = `<i class="fa-solid fa-user"></i><span>Guest</span>`;
+  showToast("Logged out");
+}
+
+function listenWorkersFirebase() {
+  if (unsubscribeWorkerRequests) unsubscribeWorkerRequests();
+  if (unsubscribeApprovedWorkers) unsubscribeApprovedWorkers();
+
+  unsubscribeWorkerRequests = workerRequestRef.orderBy("createdAt", "desc").onSnapshot(snapshot => {
+    workerRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderWorkers();
+    updateStatsFirebase();
+  }, err => {
+    console.error(err);
+    document.getElementById("workerList").innerHTML = `<div class="section-card">Worker requests load nahi ho rahe. Firebase rules check karo.</div>`;
+  });
+
+  unsubscribeApprovedWorkers = approvedWorkerRef.orderBy("approvedAt", "desc").onSnapshot(snapshot => {
+    approvedWorkers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderWorkers();
+    updateStatsFirebase();
+  }, err => console.error(err));
+}
+
+function renderWorkers() {
+  const box = document.getElementById("workerList");
+  if (!box) return;
+
+  if (!currentUser || currentUser.role !== "admin") {
+    box.innerHTML = `<div class="section-card">Only admin can see worker approval panel.</div>`;
+    return;
+  }
+
+  const pending = workerRequests.filter(w => w.status === "pending");
+  const rejected = workerRequests.filter(w => w.status === "rejected");
+
+  let html = "";
+
+  html += `<div class="section-card"><h2>Pending Worker Requests</h2>`;
+  if (pending.length === 0) {
+    html += `<p class="muted">No pending worker request found.</p>`;
+  } else {
+    html += pending.map(w => `
+      <div class="request-card">
+        <h3>${escapeHtml2(w.name || "Worker")}</h3>
+        <p><b>Phone:</b> ${escapeHtml2(w.phone || "-")}</p>
+        <p><b>Date:</b> ${escapeHtml2(w.createdDate || "-")}</p>
+        <div class="card-btns">
+          <button class="success-btn" onclick="approveWorker('${w.id}')">Approve</button>
+          <button class="danger-btn" onclick="rejectWorker('${w.id}')">Reject</button>
+        </div>
+      </div>
+    `).join("");
+  }
+  html += `</div>`;
+
+  html += `<div class="section-card"><h2>Approved Workers</h2>`;
+  if (approvedWorkers.length === 0) {
+    html += `<p class="muted">No approved worker found.</p>`;
+  } else {
+    html += approvedWorkers.map(w => `
+      <div class="request-card">
+        <h3>${escapeHtml2(w.name || "Worker")}</h3>
+        <p><b>Phone:</b> ${escapeHtml2(w.phone || "-")}</p>
+        <p><b>Approved:</b> ${escapeHtml2(w.approvedDate || "-")}</p>
+        <button class="danger-btn" onclick="removeApprovedWorker('${w.id}')">Remove Access</button>
+      </div>
+    `).join("");
+  }
+  html += `</div>`;
+
+  if (rejected.length > 0) {
+    html += `<div class="section-card"><h2>Rejected Requests</h2>`;
+    html += rejected.map(w => `
+      <div class="request-card">
+        <h3>${escapeHtml2(w.name || "Worker")}</h3>
+        <p><b>Phone:</b> ${escapeHtml2(w.phone || "-")}</p>
+        <button class="gray-btn" onclick="restoreRequest('${w.id}')">Restore Pending</button>
+      </div>
+    `).join("");
+    html += `</div>`;
+  }
+
+  box.innerHTML = html;
+}
+
+async function approveWorker(id) {
+  const req = workerRequests.find(w => w.id === id);
+  if (!req) return showToast("Request not found");
+
+  try {
+    await approvedWorkerRef.add({
+      name: req.name || "Worker",
+      phone: req.phone || "",
+      password: req.password || "",
+      role: "worker",
+      requestId: id,
+      approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      approvedDate: new Date().toLocaleString()
+    });
+
+    await workerRequestRef.doc(id).update({
+      status: "approved",
+      approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      approvedDate: new Date().toLocaleString()
+    });
+
+    showToast("Worker approved successfully");
+  } catch (error) {
+    console.error(error);
+    showToast("Approve nahi hua. Firebase rules check karo.");
+  }
+}
+
+async function rejectWorker(id) {
+  try {
+    await workerRequestRef.doc(id).update({
+      status: "rejected",
+      rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      rejectedDate: new Date().toLocaleString()
+    });
+    showToast("Worker request rejected");
+  } catch (error) {
+    console.error(error);
+    showToast("Reject nahi hua. Firebase rules check karo.");
+  }
+}
+
+async function restoreRequest(id) {
+  try {
+    await workerRequestRef.doc(id).update({ status: "pending" });
+    showToast("Request restored to pending");
+  } catch (error) {
+    console.error(error);
+    showToast("Restore nahi hua");
+  }
+}
+
+async function removeApprovedWorker(id) {
+  if (!confirm("Remove worker access?")) return;
+  try {
+    await approvedWorkerRef.doc(id).delete();
+    showToast("Worker access removed");
+  } catch (error) {
+    console.error(error);
+    showToast("Remove nahi hua");
+  }
+}
+
+function updateStatsFirebase() {
+  const pending = workerRequests.filter(w => w.status === "pending").length;
+  const workers = approvedWorkers.length;
+  const pendingEl = document.getElementById("pendingRequests");
+  const workersEl = document.getElementById("totalWorkers");
+  if (pendingEl) pendingEl.innerText = pending;
+  if (workersEl) workersEl.innerText = workers;
+}
+
+function escapeHtml2(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (typeof firebase === "undefined" || typeof db === "undefined") {
+    console.error("Firebase not loaded. Check firebase-config.js and script order.");
+  }
+});
+</script>
 </body>
 </html>
